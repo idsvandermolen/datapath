@@ -2,7 +2,7 @@
 Test datapath module
 """
 import pytest
-from datapath import DataPath
+from datapath import DataPath, parse_path
 
 
 def test_datapath_getitem():
@@ -27,6 +27,25 @@ def test_datapath_getitem():
         _ = d["a.c.1"]
     with pytest.raises(IndexError):
         _ = d["a.c[1]"]
+
+
+def test_datapath_quoting():
+    "Test double quoting."
+    data = {"a": {"0": 1, '"1"': 2}}
+    d = DataPath(data)
+    assert d.data is data
+    assert d['a."0"'] == 1
+    assert d['a["0"]'] == 1
+    assert d['a.""1""'] == 2
+    assert d['a[""1""]'] == 2
+    with pytest.raises(KeyError):
+        _ = d["a.0"]
+    with pytest.raises(KeyError):
+        _ = d["a[0]"]
+    with pytest.raises(KeyError):
+        _ = d["a.1"]
+    with pytest.raises(KeyError):
+        _ = d["a[1]"]
 
 
 def test_datapath_setitem():
