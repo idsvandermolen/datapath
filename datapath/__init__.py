@@ -2,10 +2,10 @@
 Provide access to data structures using a path expression.
 
 Use JSONPath like path spec. Split path in segments by delimiter (default ".")
-Support both keys and indices as path segments, but also key[index] as path segment
+Support both keys and indices as path segments, but also item[key] as path segment
 If you want to evaluate numbers as strings, quote the value with double quotes. If you
 want to start and end a value with double quotes, you need to double quote them again
-with doubble quotes.
+with double quotes.
 """
 import re
 
@@ -19,11 +19,15 @@ def parse_path(path: str, delimiter: str = "."):
         # split on delimiter or [index]
         for segment in re.split(r"\[([^\]]+)\]|" + re.escape(delimiter), path):
             if segment in ("", None):
+                # "" when matching more than once (brackets and delimiter like '[a].b') or 'a..b'
+                # None when matching without regex group, i.e 'a.b'
                 continue
             if segment.startswith('"') and segment.endswith('"'):
+                # remove double quotes
                 out.append(segment[1:-1])
                 continue
             try:
+                # try if it is a integer index
                 out.append(int(segment))
             except ValueError as _:
                 out.append(segment)
