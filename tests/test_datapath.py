@@ -52,36 +52,44 @@ def test_datapath_setitem():
     "Test DataPath.__setitem__"
     data = {}
     d = DataPath(data)
-    d["a"] = 1
-    assert d["a"] == 1
+    d["a"] = {"b": 1}
+    assert d["a"] == {"b": 1}
+    d["a.c"] = 2
+    assert d["a.c"] == 2
 
 
 def test_datapath_delitem():
     "Test DataPath.__delitem__"
-    data = {"a": 1}
+    data = {"a": {"b": 1}}
     d = DataPath(data)
     assert d.data is data
-    del d["a"]
-    assert d.data == {}
+    del d["a.b"]
+    assert d.data == {"a": {}}
 
 
 def test_datapath_contains():
     "Test DataPath.__contains__"
-    data = {"a": 1}
+    data = {"a": {"b": 1}}
     d = DataPath(data)
     assert "a" in d
+    assert "a.b" in d
     assert "b" not in d
+    assert "a.c" not in d
     assert "b.c" not in d
 
 
 def test_datapath_get():
     "Test DataPath.get"
-    data = {"a": 1}
+    data = {"a": {"b": 1}}
     d = DataPath(data)
-    assert d["a"] == 1
-    assert d.get("a") == 1
+    assert d["a"] == {"b": 1}
+    assert d.get("a") == {"b": 1}
+    assert d["a.b"] == 1
+    assert d.get("a.b") == 1
     assert d.get("b") is None
     assert d.get("b", 1) == 1
+    assert d.get("a.c") is None
+    assert d.get("a.c", 1) == 1
 
 
 def test_datapath_repr():
