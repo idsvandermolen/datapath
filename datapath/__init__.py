@@ -74,14 +74,14 @@ class DataPath:
         try:
             _ = self[path]
             return True
-        except (KeyError, IndexError) as _:
+        except (KeyError, IndexError, TypeError) as _:
             return False
 
     def get(self, path, default=None):
         "Return the value for path if path exists, else default."
         try:
             return self[path]
-        except (KeyError, IndexError) as _:
+        except (KeyError, IndexError, TypeError) as _:
             return default
 
     def __repr__(self):

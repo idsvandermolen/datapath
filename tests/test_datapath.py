@@ -2,7 +2,7 @@
 Test datapath module
 """
 import pytest
-from datapath import DataPath, parse_path
+from datapath import DataPath
 
 
 def test_datapath_getitem():
@@ -69,18 +69,23 @@ def test_datapath_delitem():
 
 def test_datapath_contains():
     "Test DataPath.__contains__"
-    data = {"a": {"b": 1}}
+    data = {"a": {"b": 1}, "c": [{"d": 2}]}
     d = DataPath(data)
     assert "a" in d
     assert "a.b" in d
+    assert "c[0].d" in d
     assert "b" not in d
+    assert "a.b.c" not in d
     assert "a.c" not in d
     assert "b.c" not in d
+    assert "c[0].e" not in d
+    assert "c[1]" not in d
+    assert "c[1].e" not in d
 
 
 def test_datapath_get():
     "Test DataPath.get"
-    data = {"a": {"b": 1}}
+    data = {"a": {"b": 1}, "c": [{"d": 2}]}
     d = DataPath(data)
     assert d["a"] == {"b": 1}
     assert d.get("a") == {"b": 1}
@@ -90,6 +95,12 @@ def test_datapath_get():
     assert d.get("b", 1) == 1
     assert d.get("a.c") is None
     assert d.get("a.c", 1) == 1
+    assert d.get("c") == [{"d": 2}]
+    assert d.get("c[0]") == {"d": 2}
+    assert d.get("c.d") is None
+    assert d.get("c[0].e") is None
+    assert d.get("c[1]") is None
+    assert d.get("c[1].d") is None
 
 
 def test_datapath_repr():
