@@ -83,6 +83,13 @@ def test_datapath_contains():
     assert "c[1].e" not in d
 
 
+def test_datapath__iter__():
+    "Test DataPath.__iter__"
+    data = list(range(10))
+    d = DataPath(data)
+    assert list(_ for _ in d) == data
+
+
 def test_datapath_get():
     "Test DataPath.get"
     data = {"a": {"b": 1}, "c": [{"d": 2}]}

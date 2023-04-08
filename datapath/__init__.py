@@ -77,6 +77,11 @@ class DataPath:
         except (KeyError, IndexError, TypeError) as _:
             return False
 
+    def __iter__(self):
+        "Iterate over items and return next."
+        for _ in self.data:
+            yield _
+
     def get(self, path, default=None):
         "Return the value for path if path exists, else default."
         try:
