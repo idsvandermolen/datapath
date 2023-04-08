@@ -12,7 +12,7 @@ classifiers = [
 
 [tool.poetry]
 name = "datapath"
-version = "0.3.0"
+version = "0.3.1"
 description = "Path based access to items in a data structure"
 authors = ["Ids van der Molen <2285220+idsvandermolen@users.noreply.github.com>"]
 license = "MIT"
