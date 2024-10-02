@@ -7,22 +7,20 @@ help:  ## Show help messages for make targets
 
 .PHONY: bootstrap
 bootstrap: ## Setup python .venv
-	python3 -m venv .venv \
-	&& .venv/bin/pip install --no-cache-dir --upgrade pip setuptools wheel \
-	&& . .venv/bin/activate \
-	&& poetry install
+	uv python install 3.8 \
+	&& uv python pin 3.8
 
 .PHONY: lint
 lint: ## Lint python module
-	@pylint datapath
+	@ruff check
 
 .PHONY: test
 test: ## Run test suite
-	@pytest
+	@uv run pytest
 
 .PHONY: build
 build: lint test ## Build all targets
-	@python3 -m build
+	@uv build
 
 .PHONY: bump-patch
 bump-patch: ## Bump patch version
