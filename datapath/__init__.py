@@ -7,6 +7,7 @@ If you want to evaluate numbers as strings, quote the value with double quotes. 
 want to start and end a value with double quotes, you need to double quote them again
 with double quotes.
 """
+
 import re
 
 __all__ = ["parse_path", "find", "DataPath"]
@@ -47,26 +48,31 @@ def find(data, path: list):
 class DataPath:
     "Access data with path spec."
 
-    def __init__(self, data):
+    def __init__(self, data, delimiter: str = "."):
         """Initialise with data object.
 
         data object should raise either KeyError or IndexError when an item does not exists
         """
         self.data = data
+        self.delimiter = delimiter
+
+    def _find(self, path):
+        "Internal function to wrap find."
+        return find(self.data, parse_path(path, delimiter=self.delimiter))
 
     def __getitem__(self, path):
         "Return data at path."
-        ref, key = find(self.data, parse_path(path))
+        ref, key = self._find(path)
         return ref[key]
 
     def __setitem__(self, path, value):
         "Set data at path to value."
-        ref, key = find(self.data, parse_path(path))
+        ref, key = self._find(path)
         ref[key] = value
 
     def __delitem__(self, path):
         "Delete item at path."
-        ref, key = find(self.data, parse_path(path))
+        ref, key = self._find(path)
         del ref[key]
 
     def __contains__(self, path) -> bool:

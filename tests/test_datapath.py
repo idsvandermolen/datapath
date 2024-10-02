@@ -1,6 +1,7 @@
 """
 Test datapath module
 """
+
 import pytest
 from datapath import DataPath
 
@@ -29,6 +30,15 @@ def test_datapath_getitem():
         _ = d["a.c[1]"]
 
 
+def test_datapath_getitem_delimiter():
+    "Test DataPath.__getitem__ with different delimiter."
+    data = {"a": {"b": 1, "c": [2], "d": [[3, 4], [5]]}}
+    d = DataPath(data, delimiter="/")
+    assert d.data is data
+    assert d["a"] == {"b": 1, "c": [2], "d": [[3, 4], [5]]}
+    assert d["a/b"] == 1
+
+
 def test_datapath_quoting():
     "Test double quoting."
     data = {"a": {"0": 1, '"1"': 2}}
@@ -48,6 +58,14 @@ def test_datapath_quoting():
         _ = d["a[1]"]
 
 
+def test_datapath_quoting_delimiter():
+    "Test double quoting with different delmiter."
+    data = {"a": {"0": 1, '"1"': 2}}
+    d = DataPath(data, delimiter="/")
+    assert d.data is data
+    assert d['a/"0"'] == 1
+
+
 def test_datapath_setitem():
     "Test DataPath.__setitem__"
     data = {}
@@ -58,12 +76,31 @@ def test_datapath_setitem():
     assert d["a.c"] == 2
 
 
+def test_datapath_setitem_delimiter():
+    "Test DataPath.__setitem__ with different delimiter."
+    data = {}
+    d = DataPath(data, delimiter="/")
+    d["a"] = {"b": 1}
+    assert d["a"] == {"b": 1}
+    d["a/c"] = 2
+    assert d["a/c"] == 2
+
+
 def test_datapath_delitem():
     "Test DataPath.__delitem__"
     data = {"a": {"b": 1}}
     d = DataPath(data)
     assert d.data is data
     del d["a.b"]
+    assert d.data == {"a": {}}
+
+
+def test_datapath_delitem_delimiter():
+    "Test DataPath.__delitem__ with different delimiter."
+    data = {"a": {"b": 1}}
+    d = DataPath(data, delimiter="/")
+    assert d.data is data
+    del d["a/b"]
     assert d.data == {"a": {}}
 
 
@@ -81,6 +118,14 @@ def test_datapath_contains():
     assert "c[0].e" not in d
     assert "c[1]" not in d
     assert "c[1].e" not in d
+
+
+def test_datapath_contains_delimiter():
+    "Test DataPath.__contains__"
+    data = {"a": {"b": 1}, "c": [{"d": 2}]}
+    d = DataPath(data, delimiter="/")
+    assert "a" in d
+    assert "a/b" in d
 
 
 def test_datapath__iter__():
@@ -108,6 +153,15 @@ def test_datapath_get():
     assert d.get("c[0].e") is None
     assert d.get("c[1]") is None
     assert d.get("c[1].d") is None
+
+
+def test_datapath_get_delimiter():
+    "Test DataPath.get with different delimiter."
+    data = {"a": {"b": 1}, "c": [{"d": 2}]}
+    d = DataPath(data, delimiter="/")
+    assert d["a"] == {"b": 1}
+    assert d.get("a") == {"b": 1}
+    assert d["a/b"] == 1
 
 
 def test_datapath_repr():
