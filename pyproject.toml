@@ -1,6 +1,6 @@
 [project]
 name = "datapath"
-version = "0.4.0"
+version = "0.5.0"
 description = "Path based access to items in a data structure"
 authors = [
     {name = "Ids van der Molen", email = "2285220+idsvandermolen@users.noreply.github.com"}

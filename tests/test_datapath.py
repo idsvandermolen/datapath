@@ -86,6 +86,21 @@ def test_datapath_setitem_delimiter():
     assert d["a/c"] == 2
 
 
+def test_datapath_setitem_intermediate():
+    "Test DataPath.__setitem__ with create_intermediate."
+    data = {}
+    d = DataPath(data)
+    assert d.data is data
+    with pytest.raises(KeyError):
+        d["a.b"] = {}
+    d = DataPath(data, create_intermediate=True)
+    assert d.data is data
+    d["a.b"] = {}
+    assert d.data == {"a": {"b": {}}}
+    d["a.b.c.d.e"] = 1
+    assert d.data == {"a": {"b": {"c": {"d": {"e": 1}}}}}
+
+
 def test_datapath_delitem():
     "Test DataPath.__delitem__"
     data = {"a": {"b": 1}}
