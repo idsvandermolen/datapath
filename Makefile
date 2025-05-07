@@ -18,6 +18,11 @@ lint: ## Lint python module
 test: ## Run test suite
 	@uv run pytest
 
+.PHONY: test-coverage
+test-coverage: ## Run test suite with coverage
+	@uv run pytest --cov=datapath --cov-report=term-missing
+	@uv run pytest --cov=datapath --cov-report=html
+
 .PHONY: build
 build: lint test ## Build all targets
 	@uv build
