@@ -1,7 +1,7 @@
 repos:
   - repo: https://github.com/astral-sh/ruff-pre-commit
     # Ruff version.
-    rev: 75b98813cfb7e663870a28c74366a1e99d7bfe79  # frozen: v0.6.9
+    rev: f0fe93c067104b76ffb58852abe79673a8429bd1  # frozen: v0.11.8
     hooks:
       # Run the linter.
       - id: ruff
@@ -10,7 +10,7 @@ repos:
       - id: ruff-format
   - repo: https://github.com/astral-sh/uv-pre-commit
     # uv version.
-    rev: 4f2e20426692c8fa0c25b6996d25b29823e72ef0  # frozen: 0.4.18
+    rev: d3fe7262f7fd4563482eeab6a62b6f658cbea7a2  # frozen: 0.7.2
     hooks:
       # Update the uv lockfile
       - id: uv-lock
