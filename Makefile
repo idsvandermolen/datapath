@@ -46,3 +46,8 @@ tag:
 .PHONY: release
 release: tag ## Publish a release
 	@git push origin $(TAG)
+
+.PHONY: pre-commit-update
+pre-commit-update: ## Update pre-commit hooks
+	@pre-commit autoupdate --freeze
+	@pre-commit install
